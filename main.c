@@ -43,8 +43,9 @@ int main() {
     Num num1, num2, result;
 
     printf("Enter an equation: ");
-    operation = (char) fgetc(stdin);
-    ungetc(operation, stdin);
+    operation = (char) fgetc(stdin); // take first char
+    ungetc(operation, stdin); // put it back
+
     if (operation == '~') {
         scanf("%c%s", &operation, str1);
         num1 = strToNum(str1);

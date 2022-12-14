@@ -170,7 +170,11 @@ Num add(Num num1, Num num2) {
  * @return Num - the result
  */
 Num sub(Num num1, Num num2) {
-    return add(num1, (Num) {-num2.value, num2.origBase});
+    Num num = {num1.value - num2.value, num1.origBase};
+    if (num1.origBase != num2.origBase) {
+        error("sub ERROR: different bases");
+    }
+    return num;
 }
 
 /*

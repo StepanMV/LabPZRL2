@@ -1,5 +1,12 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "calc.h"
+
+void error(char* err) {
+    printf("%s\n", err);
+    exit(1);
+}
+
 
 int charToDigit(char c) {
     if (c >= '0' && c <= '9') {
@@ -16,11 +23,7 @@ int charToDigit(char c) {
 /*
  * Converts a string to a number in base 2, 8 or 16
  * @param str - the string to convert
- * @return Num - SUCCESS
- * @errors:
- *     -1 - invalid base
- *     -2 - empty value
- *     -3 - invalid digit for the base
+ * @return Num - the number
  */
 Num strToNum(const char *str) {
     Num num = {0, 0};
@@ -52,10 +55,8 @@ Num strToNum(const char *str) {
         num.origBase = onlyBin ? 2 : 10;
     }
 
-    // ERROR: invalid base
     if (num.origBase == 10) {
-        num.origBase = -1;
-        return num;
+        error("strToNum ERROR: invalid base");
     }
 
     // String length calculation
@@ -65,9 +66,7 @@ Num strToNum(const char *str) {
     }
 
     if (len == 0) {
-        // ERROR: empty value
-        num.origBase = -2;
-        return num;
+        error("strToNum ERROR: empty value");
     }
 
     // Value calculation
@@ -76,8 +75,7 @@ Num strToNum(const char *str) {
         int digit = charToDigit(str[len - i - 1]);
         // ERROR: invalid digit for the base
         if (digit == -1 || digit >= num.origBase) {
-            num.origBase = -3;
-            return num;
+            error("strToNum ERROR: invalid digit for the base");
         }
         num.value += digit * baseInPow;
         baseInPow *= num.origBase;
@@ -93,7 +91,7 @@ Num strToNum(const char *str) {
 /*
  * Converts a number to a string in base 2, 8 or 16
  * @param num - the number to convert
- * @return char* - SUCCESS
+ * @return char* - the string
  * @errors:
  *     NULL - invalid base
  */
@@ -155,14 +153,12 @@ char *numToStr(Num num) {
  * Adds two numbers
  * @param num1 - the first number
  * @param num2 - the second number
- * @return Num - SUCCESS
- * @errors:
- *    -1 - different bases
+ * @return Num - the result
  */
 Num add(Num num1, Num num2) {
     Num num = {num1.value + num2.value, num1.origBase};
     if (num1.origBase != num2.origBase) {
-        num.origBase = -1;
+        error("add ERROR: different bases");
     }
     return num;
 }
@@ -171,9 +167,7 @@ Num add(Num num1, Num num2) {
  * Subtracts two numbers
  * @param num1 - the first number
  * @param num2 - the second number
- * @return Num - SUCCESS
- * @errors:
- *    -1 - different bases
+ * @return Num - the result
  */
 Num sub(Num num1, Num num2) {
     return add(num1, (Num) {-num2.value, num2.origBase});
@@ -183,14 +177,12 @@ Num sub(Num num1, Num num2) {
  * Multiplies two numbers
  * @param num1 - the first number
  * @param num2 - the second number
- * @return Num - SUCCESS
- * @errors:
- *    -1 - different bases
+ * @return Num - the result
  */
 Num mul(Num num1, Num num2) {
     Num num = {num1.value * num2.value, num1.origBase};
     if (num1.origBase != num2.origBase) {
-        num.origBase = -1;
+        error("mul ERROR: different bases");
     }
     return num;
 }
@@ -199,19 +191,15 @@ Num mul(Num num1, Num num2) {
  * Calculates the remainder of two numbers
  * @param num1 - the first number
  * @param num2 - the second number
- * @return Num - SUCCESS
- * @errors:
- *    -1 - different bases
- *    -3 - division by zero
+ * @return Num - the result
  */
 Num rem(Num num1, Num num2) {
     if (num2.value == 0) {
-        Num num = {0, -3};
-        return num;
+        error("rem ERROR: division by zero");
     }
     Num num = {num1.value % num2.value, num1.origBase};
     if (num1.origBase != num2.origBase) {
-        num.origBase = -1;
+        error("rem ERROR: different bases");
     }
     return num;
 }
@@ -220,17 +208,14 @@ Num rem(Num num1, Num num2) {
  * Calculates bitwise AND of two numbers
  * @param num1 - the first number
  * @param num2 - the second number
- * @return Num - SUCCESS
- * @errors:
- *    -1 - different bases
- *    -2 - negative value
+ * @return Num - the result
  */
 Num bitAnd(Num num1, Num num2) {
     Num num = {num1.value & num2.value, num1.origBase};
     if (num1.origBase != num2.origBase) {
-        num.origBase = -1;
+        error("bitAnd ERROR: different bases");
     } else if (num1.value < 0 || num2.value < 0) {
-        num.origBase = -2;
+        error("bitAnd ERROR: negative value");
     }
     return num;
 }
@@ -239,17 +224,14 @@ Num bitAnd(Num num1, Num num2) {
  * Calculates bitwise OR of two numbers
  * @param num1 - the first number
  * @param num2 - the second number
- * @return Num - SUCCESS
- * @errors:
- *    -1 - different bases
- *    -2 - negative value
+ * @return Num - the result
  */
 Num bitOr(Num num1, Num num2) {
     Num num = {num1.value | num2.value, num1.origBase};
     if (num1.origBase != num2.origBase) {
-        num.origBase = -1;
+        error("bitOr ERROR: different bases");
     } else if (num1.value < 0 || num2.value < 0) {
-        num.origBase = -2;
+        error("bitOr ERROR: negative value");
     }
     return num;
 }
@@ -258,17 +240,14 @@ Num bitOr(Num num1, Num num2) {
  * Calculates bitwise XOR of two numbers
  * @param num1 - the first number
  * @param num2 - the second number
- * @return Num - SUCCESS
- * @errors:
- *    -1 - different bases
- *    -2 - negative value
+ * @return Num - the result
  */
 Num bitXor(Num num1, Num num2) {
     Num num = {num1.value ^ num2.value, num1.origBase};
     if (num1.origBase != num2.origBase) {
-        num.origBase = -1;
+        error("bitXor ERROR: different bases");
     } else if (num1.value < 0 || num2.value < 0) {
-        num.origBase = -2;
+        error("bitXor ERROR: negative value");
     }
     return num;
 }
@@ -276,7 +255,7 @@ Num bitXor(Num num1, Num num2) {
 /*
  * Calculates bitwise NOT of a number
  * @param num - the number
- * @return Num - SUCCESS
+ * @return Num - the result
  */
 Num bitNot(Num num) {
     num.value = ~num.value;

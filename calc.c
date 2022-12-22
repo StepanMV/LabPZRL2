@@ -43,7 +43,7 @@ Num strToNum(const char *str) {
         str += 2;
     } else if (str[0] == '0') {
         num.origBase = 8;
-        str += 2;
+        str += 1;
     } else {
         int onlyBin = 1;
         for (int i = 0; str[i] != '\0'; i++) {

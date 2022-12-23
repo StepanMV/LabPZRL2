@@ -8,8 +8,6 @@ typedef struct {
 
 Num strToNum(const char *str);
 
-int charToDigit(char c);
-
 char* numToStr(Num num);
 
 Num add(Num num1, Num num2);

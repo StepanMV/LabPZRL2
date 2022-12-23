@@ -2,11 +2,6 @@
 #include <stdlib.h>
 #include "calc.h"
 
-void error(char* err) {
-    printf("%s\n", err);
-    exit(1);
-}
-
 /*
  * Adds two numbers
  * @param num1 - the first number

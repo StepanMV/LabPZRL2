@@ -6,6 +6,8 @@ typedef struct {
     int origBase;
 } Num;
 
+void error(char* err);
+
 Num strToNum(const char *str);
 
 char* numToStr(Num num);

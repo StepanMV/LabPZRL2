@@ -2,11 +2,6 @@
 #include <stdlib.h>
 #include "calc.h"
 
-void error(char* err) {
-    printf("%s\n", err);
-    exit(1);
-}
-
 /*
  * Converts a number to a string in base 2, 8 or 16
  * @param num - the number to convert
